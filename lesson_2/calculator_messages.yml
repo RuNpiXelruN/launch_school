@@ -1,0 +1,23 @@
+
+
+welcome: "Welcome to Calculator! Enter you name: "
+
+valid_name: "Please enter a valid name"
+
+welcome_user: "Hello"
+
+first_number: "What is the first number?"
+
+second_number: "What is the second number?"
+
+bad_number: "That number doesn't look right.."
+
+valid_operator: "Please choose a 1, 2, 3 or 4"
+
+performing_operation: " the two numbers..."
+
+your_result: "The answer is "
+
+go_again?: "Would you like to perform another calculation? Y/n"
+
+exit_thankyou: "Thankyou for using calculator!"

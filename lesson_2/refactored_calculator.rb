@@ -1,108 +1,121 @@
+require 'pry'
+require 'yaml'
+MESSAGES = YAML.load_file('calculator_messages.yml')
 
 
 def prompt(message)
-   puts "=> #{message}" 
+  puts "=> #{message}"
 end
 
-def valid_number?(num)
-   num.to_i != 0 
+def integer?(num)
+  /^\d+$/.match(num)
+end
+
+def float?(num)
+  /\d/.match(num) && /^\d*\.?\d*$/.match(num)
+end
+
+def number?(num)
+  integer?(num) || float?(num)
 end
 
 operator_prompt = <<-MSG
 What operation would you like to perform?
-    1) Add 
-    2) Subtract 
-    3) Multiply 
-    4) Divide
+  1) Add
+  2) Subtract
+  3) Multiply
+  4) Divide
 MSG
 
 def operation_to_message(op)
-    case op
-        when '1'
-            'Adding'
-        when '2'
-            "Subtracting"
-        when '3'
-            'Multiplying'
-        when '4'
-            'Dividing'
-    end
+  result = case op
+  when '1'
+    'Adding'
+  when '2'
+    "Subtracting"
+  when '3'
+    'Multiplying'
+  when '4'
+    'Dividing'
+  end
+  
+  result
 end
 
     
 
-prompt("Welcome to Calculator! Enter you name: ")
+prompt(MESSAGES['welcome'])
 
 name= ''
 loop do
-    name = gets.chomp
+  name = gets.chomp
     if name.empty?
-        prompt("Please enter a valid name")
+      prompt(MESSAGES['valid_name'])
     else
-        break
+      break
     end
 end
 
-prompt("Hello #{name}!")
+prompt(MESSAGES['welcome_user'] + " #{name}!")
 
 loop do # main loop
-    number1 = ''
-    loop do
-        prompt("What is the first number?")
-        number1 = gets.chomp.to_i
-        if valid_number?(number1)
-            break
-        else
-            prompt("That number doesn't look right..")
-        end
+  number1 = ''
+  loop do
+    prompt(MESSAGES['first_number'])
+    number1 = gets.chomp
+    if number?(number1)
+      break
+    else
+      prompt(MESSAGES['bad_number'])
     end
+  end
     
-    number2 = ''
-    loop do
-        prompt("What is the second number?")
-        number2 = gets.chomp.to_i
-        if valid_number?(number2)
-            break
-        else
-            prompt("Hmm...something went wrong...")
-        end
+  number2 = ''
+  loop do
+    prompt(MESSAGES['second_number'])
+    number2 = gets.chomp
+    if number?(number2)
+      break
+    else
+      prompt(MESSAGES['bad_number'])
     end
+  end
     
     
     
-    prompt(operator_prompt)
+  prompt(operator_prompt)
         
-    operator = ''
+  operator = ''
     
-    loop do
-        operator = gets.chomp
-        if %w(1 2 3 4).include?(operator)
-            break
-        else
-            prompt("Please choose a 1, 2, 3 or 4")
-        end
-    end    
-    
-    prompt("#{operation_to_message(operator)} the two numbers...")
-    sleep(1)
-    
-    result = case operator
-        when '1'
-            number1 + number2
-        when '2'
-            number1 - number2
-        when '3'
-            number1 * number2
-        when '4'
-            number1.to_f / number2.to_f
+  loop do
+    operator = gets.chomp
+    if %w(1 2 3 4).include?(operator)
+      break
+    else
+      prompt(MESSAGES['valid_operator'])
     end
+  end    
+    
+  prompt("#{operation_to_message(operator)}" + MESSAGES['performing_operation'])
+  sleep(1)
+    
+  result = case operator
+    when '1'
+      number1 + number2
+    when '2'
+      number1 - number2
+    when '3'
+      number1 * number2
+    when '4'
+      number1.to_f / number2.to_f
+  end
     
     
-    prompt("The answer is #{result}")
+  prompt(MESSAGES['your_result'] + "#{result}!")
     
-    prompt("Would you like to perform another calculation? Y/n")
-    answer = gets.chomp
-    break unless answer.downcase.start_with?('y')
-end
+  prompt(MESSAGES['go_again?'])
+  answer = gets.chomp
+  break unless answer.downcase.start_with?('y')
+  end
 
-prompt('Thankyou for using calculator!')
+prompt(MESSAGES['exit_thankyou'])

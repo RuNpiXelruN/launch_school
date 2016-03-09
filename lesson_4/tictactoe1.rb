@@ -72,11 +72,22 @@ end
 
 def computer_places_piece!(brd)
   square = nil
+
+  # offense first
   WINNING_LINES.each do |line|
-    square = find_at_risk_square(line,brd)
+    square = find_at_risk_square(line, brd, COMPUTER_MARKER)
     break if square
   end
+
+  # defense
+  if !square
+    WINNING_LINES.each do |line|
+      square = find_at_risk_square(line, brd, PLAYER_MARKER)
+      break if square
+    end
+  end
   
+  # just pick any square
   if !square
     square = empty_squares(brd).sample
   end
@@ -94,31 +105,34 @@ end
 
 
 def detect_winner(brd)
-  player_score = 0
-  computer_score = 0
   WINNING_LINES.each do |line|
     case
     when brd.values_at(*line).count(PLAYER_MARKER) == 3
-      player_score += 1
+      player_score = player_score + 1
       return 'Player'
     when brd.values_at(*line).count(COMPUTER_MARKER) == 3
-      computer_score += 1
+      computer_score = computer_score + 1
       return 'Computer'
     end
+    puts player_score
+    puts computer_score
   end
   nil
 end
 
-def find_at_risk_square(line, board)
-  if board.values_at(*line).count('X') == 2
-    board.select {|k,v| line.include?(k) && v == ' '}.keys.first
+def find_at_risk_square(line, board, marker)
+  if board.values_at(*line).count(marker) == 2
+    board.select {|k,v| line.include?(k) && v == INITIAL_MARKER}.keys.first
   else
     nil
   end
 end
-
+player_score = 0
+computer_score = 0
 loop do # main loop
   board = initialize_board
+  player_score = 0
+  computer_score = 0
 
   loop do
     display_board(board)
@@ -130,6 +144,7 @@ loop do # main loop
     break if someone_won?(board) || board_full?(board)
   end
 
+  puts "Player: #{player_score}, Computer: #{computer_score}"
   display_board(board)
 
   if someone_won?(board)
@@ -137,7 +152,6 @@ loop do # main loop
   else
     prompt "It's a tie!"
   end
-  prompt "Player: #{player_score}, Computer: #{computer_score}"
   prompt "Play again? (y or n)"
   go_again = gets.chomp
 

@@ -94,11 +94,15 @@ end
 
 
 def detect_winner(brd)
+  player_score = 0
+  computer_score = 0
   WINNING_LINES.each do |line|
     case
     when brd.values_at(*line).count(PLAYER_MARKER) == 3
+      player_score += 1
       return 'Player'
     when brd.values_at(*line).count(COMPUTER_MARKER) == 3
+      computer_score += 1
       return 'Computer'
     end
   end
@@ -133,6 +137,7 @@ loop do # main loop
   else
     prompt "It's a tie!"
   end
+  prompt "Player: #{player_score}, Computer: #{computer_score}"
   prompt "Play again? (y or n)"
   go_again = gets.chomp
 

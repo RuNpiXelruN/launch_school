@@ -52,15 +52,28 @@ def detect_result(dealer_cards, player_cards)
   dealer_total = total(dealer_cards)
 
   if player_total > 21
+    @dealer_score += 1
     :player_busted
   elsif dealer_total > 21
+    @player_score += 1
     :dealer_busted
   elsif dealer_total < player_total
+    @player_score += 1
     :player_wins
   elsif player_total < dealer_total
+    @dealer_score += 1
     :dealer_wins
   else
     :tie
+  end
+end
+
+def count_of_five?
+  case
+  when @player_score == 5
+    puts "Congratulations you've won!!!!"
+  when @dealer_score == 5
+    puts "Ohh crap...the Dealer has won :("
   end
 end
 
@@ -85,6 +98,10 @@ def display_result(dealer_cards, player_cards)
   end
 end
 
+def display_score
+  puts "Scoreboard: Player = #{@player_score}, Dealer = #{@dealer_score}"
+end
+
 def play_again?
   puts '============'
   puts "Would you like to play again? (y or n)"
@@ -92,6 +109,8 @@ def play_again?
   go_again.downcase.start_with?('y')
   puts '============'
 end
+@player_score = 0
+@dealer_score = 0
 
 puts "Welcome to 21"
 
@@ -155,11 +174,13 @@ loop do # main loop
   end
   sleep(1)
   display_result(dealer_cards,player_cards)
+  display_score
 
-  sleep(1.5)
-  puts "Play another hand?? (y or n)"
-  go_again = gets.chomp
-  break unless go_again.downcase.start_with?('y')
+  unless count_of_five?
+    puts "Play another hand?? (y or n)"
+    go_again = gets.chomp
+    break unless go_again.downcase.start_with?('y')
+  end
 end
 
 puts "Thankyou for playing!"

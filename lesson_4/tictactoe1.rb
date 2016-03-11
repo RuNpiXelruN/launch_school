@@ -103,19 +103,18 @@ def someone_won?(brd)
   !!detect_winner(brd)
 end
 
+score = {player: 0, computer: 0}
+
 
 def detect_winner(brd)
   WINNING_LINES.each do |line|
     case
     when brd.values_at(*line).count(PLAYER_MARKER) == 3
-      player_score = player_score + 1
       return 'Player'
     when brd.values_at(*line).count(COMPUTER_MARKER) == 3
-      computer_score = computer_score + 1
       return 'Computer'
     end
-    puts player_score
-    puts computer_score
+
   end
   nil
 end
@@ -127,12 +126,10 @@ def find_at_risk_square(line, board, marker)
     nil
   end
 end
-player_score = 0
-computer_score = 0
+
+
 loop do # main loop
   board = initialize_board
-  player_score = 0
-  computer_score = 0
 
   loop do
     display_board(board)
@@ -144,7 +141,7 @@ loop do # main loop
     break if someone_won?(board) || board_full?(board)
   end
 
-  puts "Player: #{player_score}, Computer: #{computer_score}"
+  
   display_board(board)
 
   if someone_won?(board)

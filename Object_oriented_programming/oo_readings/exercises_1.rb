@@ -9,6 +9,14 @@ class MyCar
     @current_speed = 0
   end
   
+  def self.mileage(litres, kms)
+    puts "#{kms / litres} kms per litre of petrol"
+  end
+  
+  def to_s
+    puts "My car is a #{@model} from #{year}, and is #{color} in color."
+  end
+  
   def speed_up(number)
     @current_speed += number
     puts "You hit the gas and sped up to #{@current_speed}kms/hr!"
@@ -55,3 +63,7 @@ first_car.color = 'black'
 puts first_car.color
 puts first_car.year
 first_car.spray_paint('yellow')
+MyCar.mileage(50, 600)
+
+my_car = MyCar.new(2015, 'white', 'Subaru Forester')
+puts my_car
